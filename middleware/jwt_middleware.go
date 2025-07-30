@@ -3,14 +3,13 @@ package middleware
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtKey = []byte(os.Getenv("JWT_SECRET"))
+var jwtKey = []byte("corelyst")
 
 func GenerateJWT(username string) (string, error) {
 	claims := &jwt.RegisteredClaims{
@@ -25,7 +24,7 @@ func GenerateJWT(username string) (string, error) {
 
 func JWTMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		auth := r.Header.Get(("Auth"))
+		auth := r.Header.Get(("Authorization"))
 		if auth == "" || !strings.HasPrefix(auth, "Bearer ") {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
